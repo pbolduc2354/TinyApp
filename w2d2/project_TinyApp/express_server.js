@@ -55,8 +55,10 @@ app.get("/urls/new", (req, res) => {
 
 
 app.get("/urls/:id", (req, res) => {
-  let longURL = urlDatabase[req.params.id];
-  let templateVars = { shortURL : shortURL,
+  let shortURL = req.params.id;
+  let longURL = urlDatabase[shortURL];
+  let templateVars = {
+    shortURL : shortURL,
     longURL: longURL
    }
   res.render("urls_show", templateVars);
