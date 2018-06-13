@@ -64,6 +64,17 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 })
 
+app.post("/urls/:id", (req, res) => {
+  let shortURL = req.params.id;
+  let longURL = req.body.box;
+  urlDatabase[shortURL] = longURL;
+  // console.log("Current value", urlDatabase[shortURL])
+  // console.log("shortURL", shortURL)
+  // console.log("longURL", longURL)
+  // console.log("request", req)
+  res.redirect("/urls");
+})
+
 app.post("/urls/:id/delete", (req, res) =>{
   let shortURL = req.params.id;
   delete urlDatabase[shortURL];

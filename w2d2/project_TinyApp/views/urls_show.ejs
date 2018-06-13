@@ -10,14 +10,16 @@
   <table>
     <thead>
       <tr>
-        <th>Short url</th>
-        <th>Long url</th>
+        <th><h1>Short url:</h1></th>
+        <th><h2><%= shortURL %></h2></th>
       </tr>
     </thead>
     <tbody>
         <tr>
-          <td><%= shortURL %></td>
-          <td><%= longURL %></td>
+            <form method="POST" action="/urls/<%= shortURL%>">
+              <td><input type="text" name="box" value="<%= longURL %>"></td>
+              <td><input type="submit" value="Update"></td>
+            </form>
         </tr>
   </tbody>
   </table>
