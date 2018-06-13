@@ -70,7 +70,6 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     username: req.cookies["username"],
   };
-
   res.render("urls_new", templateVars);
 });
 
