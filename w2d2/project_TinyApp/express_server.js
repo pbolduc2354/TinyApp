@@ -40,8 +40,13 @@ app.get("/urls", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+
+  let shortURL = generateRandomString()
+  let longURL = req.body.longURL;
+  urlDatabase[shortURL] = longURL;
+
+  res.redirect('/urls')
+
 });
 
 app.get("/urls/new", (req, res) => {
@@ -50,13 +55,17 @@ app.get("/urls/new", (req, res) => {
 
 
 app.get("/urls/:id", (req, res) => {
-  let shortURL = req.params.id;
-  let longURL = urlDatabase[shortURL];
+  let longURL = urlDatabase[req.params.id];
   let templateVars = { shortURL : shortURL,
     longURL: longURL
    }
   res.render("urls_show", templateVars);
 })
+
+app.get("/u/:shortURL", (req, res) => {
+  let longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
