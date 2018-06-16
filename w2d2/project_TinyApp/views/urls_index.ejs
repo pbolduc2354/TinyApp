@@ -17,7 +17,7 @@
     <tbody>
       <% for(let shortUrl in urls) { %>
           <td><%= shortUrl %></td>
-          <td><%= urls[shortUrl] %></td>
+          <td><%= urls[shortUrl].longURL %></td>
           <td>
             <form method="GET" action="/urls/<%= shortUrl %>">
             <input type="submit" value="Edit">

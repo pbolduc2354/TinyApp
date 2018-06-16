@@ -24,13 +24,21 @@ function generateRandomString() {
 app.set("view engine", "ejs")
 
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xk": "http://www.google.com"
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    shortURL: "9sm5xk",
+    userID: ""
+  },
+  "9sm5xk": {
+    longURL:"http://www.google.com",
+    shortURL: "9sm5xk" ,
+    userID:"user3RandomID"
+  }
 };
 
 const users = {
   userRandomID: {
-    id: "userRadomID",
+    id: "userRandomID",
     email: "user@example.com",
     password: "chat"
   } ,
@@ -70,7 +78,6 @@ app.post("/login", (req, res) => {
   if (userEmailVerificator(req) && userPasswordVerificator(req)) {
     for (let id in users){
       if (users[id].email == req.body.email) {
-      // console.log(users[id].email)
       res.cookie("user_id", id)
     } else {
         users[id] = {
@@ -79,18 +86,12 @@ app.post("/login", (req, res) => {
         password: req.body.password,
         }
       res.cookie("user_id", id)
-      console.log("pas de id")
+      res.redirect("/urls")
     }
     }
-
-
   } else {
-    res.send(403)
+    res.sendStatus(403)
   }
-  res.redirect("/urls")
-  console.log(req.body.id)
-    console.log(user)
-
 });
 
 //logout
@@ -127,8 +128,8 @@ app.post("/register", (req, res) => {
 
 //Main page urls
 app.get("/urls", (req, res) => {
+
   let templateVars = { urls: urlDatabase, user: req.cookies["user_id"] };
-  console.log(templateVars.user)
   res.render("urls_index", templateVars);
 });
 
@@ -137,8 +138,11 @@ app.post("/urls", (req, res) => {
 
   let shortURL = generateRandomString()
   let longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
-
+  urlDatabase[shortURL] = {
+    longURL : longURL,
+    userID: req.cookies["user_id"]
+  };
+    console.log(urlDatabase)
   res.redirect('/urls')
 
 });
@@ -147,7 +151,12 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     user: req.cookies["user_id"],
   };
-  res.render("urls_new", templateVars);
+  if (req.cookies["user_id"]) {
+    res.render("urls_new", templateVars);
+  } else {
+    res.render("urls_login" , templateVars)
+  }
+
 });
 
 // pages for each id
@@ -172,8 +181,13 @@ app.post("/urls/:id", (req, res) => {
 })
 
 app.post("/urls/:id/delete", (req, res) =>{
+
   let shortURL = req.params.id;
-  delete urlDatabase[shortURL];
+
+  if(req.cookies.user_id == urlDatabase[shortURL].userID) {
+    delete urlDatabase[shortURL];
+  }
+
 
   res.redirect("/urls");
 })
