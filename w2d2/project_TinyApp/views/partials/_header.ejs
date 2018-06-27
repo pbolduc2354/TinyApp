@@ -8,7 +8,7 @@
     <tbody>
       <tr>
         <% if(user) { %>
-        <span>"You're already login" </span>
+        <span><%= user.email%> </span>
         <form method="POST" action="/logout">
          <input type="submit" value="logout">
        </form>
