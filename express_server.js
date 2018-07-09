@@ -61,7 +61,7 @@ function generateRandomString() {
 var urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
-    shortURL: "9sm5xk",
+    shortURL: "b2xVn2",
     userID: ""
   },
   "9sm5xk": {
@@ -202,8 +202,8 @@ app.get("/urls/new", (req, res) => {
 
 // pages for each id
 app.get("/urls/:id", (req, res) => {
-  if (req.session["user_id"]) {
-    let shortURL = req.params.id;
+  let shortURL = req.params.id;
+  if (req.session["user_id"] === urlDatabase[shortURL].userID) {
     let longURL = urlDatabase[shortURL];
     let templateVars = {
        shortURL : shortURL,
@@ -212,9 +212,12 @@ app.get("/urls/:id", (req, res) => {
    }
   res.render("urls_show", templateVars);
 
-  } else
+  } else if (req.session["user_id"]){
+  res.redirect("/urls");
+} else {
   res.redirect("/login");
-})
+}
+});
 
 // update existing URL
 app.post("/urls/:id", (req, res) => {
