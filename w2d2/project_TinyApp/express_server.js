@@ -202,14 +202,18 @@ app.get("/urls/new", (req, res) => {
 
 // pages for each id
 app.get("/urls/:id", (req, res) => {
-  let shortURL = req.params.id;
-  let longURL = urlDatabase[shortURL];
-  let templateVars = {
-    shortURL : shortURL,
-    longURL: longURL.longURL,
-    user: users[req.session["user_id"]]
+  if (req.session["user_id"]) {
+    let shortURL = req.params.id;
+    let longURL = urlDatabase[shortURL];
+    let templateVars = {
+       shortURL : shortURL,
+      longURL: longURL.longURL,
+      user: users[req.session["user_id"]]
    }
   res.render("urls_show", templateVars);
+
+  } else
+  res.redirect("/login");
 })
 
 // update existing URL
